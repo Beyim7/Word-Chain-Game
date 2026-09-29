@@ -1,0 +1,11 @@
+{
+  "appId": "com.wordchain.puzzle",
+  "appName": "Word Chain",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}

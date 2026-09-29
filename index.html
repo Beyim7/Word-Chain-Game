@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#0f1020" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>Word Chain</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    <section id="screen-menu" class="screen active">
+      <div class="menu-hero">
+        <p class="eyebrow">Offline puzzle</p>
+        <h1>Word<br />Chain</h1>
+        <p class="tagline">Link words into real phrases. One step at a time.</p>
+      </div>
+      <div class="menu-meta">
+        <span class="chip">🪙 <span data-coins>0</span></span>
+        <span class="chip" id="menu-progress">0 / 50 cleared</span>
+      </div>
+      <div class="menu-actions">
+        <button id="btn-play" class="btn btn-primary" type="button">
+          Play
+          <small id="play-caption">Continue level 01</small>
+        </button>
+        <button class="btn btn-ghost" type="button" data-screen="levels">Levels</button>
+        <div class="btn-row">
+          <button class="btn btn-ghost" type="button" data-screen="settings">Settings</button>
+          <button class="btn btn-ghost" type="button" data-screen="about">About</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-levels" class="screen">
+      <header class="topbar">
+        <button class="icon-btn" type="button" data-screen="menu" aria-label="Back">←</button>
+        <h2>Levels</h2>
+        <span class="chip sm">🪙 <span data-coins>0</span></span>
+      </header>
+      <p class="hint-copy">Clear a level to unlock the next one.</p>
+      <div id="level-grid" class="level-grid"></div>
+    </section>
+
+    <section id="screen-settings" class="screen">
+      <header class="topbar">
+        <button class="icon-btn" type="button" data-screen="menu" aria-label="Back">←</button>
+        <h2>Settings</h2>
+        <span></span>
+      </header>
+      <label class="setting-row">
+        <span>
+          Sound
+          <small>Plays beeps if sound files are missing</small>
+        </span>
+        <input id="sound-toggle" type="checkbox" />
+      </label>
+      <button id="btn-reset" class="btn btn-danger" type="button">Reset progress</button>
+      <p class="fine">This clears unlocked levels, stars, scores, and coins on this device only.</p>
+
+      <div class="setting-row redeem-row">
+        <span>
+          Redeem Code
+          <small>Enter a code to claim bonus coins</small>
+        </span>
+      </div>
+      <div class="redeem-box">
+        <input id="redeem-input" class="redeem-input" type="text" placeholder="Enter Code" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" />
+        <button id="btn-redeem" class="btn btn-primary redeem-btn" type="button">Redeem</button>
+      </div>
+      <p id="redeem-message" class="redeem-message"></p>
+    </section>
+
+    <section id="screen-about" class="screen">
+      <header class="topbar">
+        <button class="icon-btn" type="button" data-screen="menu" aria-label="Back">←</button>
+        <h2>How to play</h2>
+        <span></span>
+      </header>
+      <div class="about-card">
+        <p>You are given a starting word. Type the next word in the chain.</p>
+        <p><strong>Every two neighbors must form a real phrase or compound.</strong></p>
+        <p class="example">BIRTHDAY → PARTY → TIME → MACHINE → GUN</p>
+        <ul>
+          <li>birthday party</li>
+          <li>party time</li>
+          <li>time machine</li>
+          <li>machine gun</li>
+        </ul>
+        <p>Solve in order. The first letter of each hidden word is shown. Just type on your keyboard: the word itself is the input. Hints reveal one extra letter and cost coins.</p>
+        <p>All 50 levels and your progress stay on this device. No internet required.</p>
+      </div>
+    </section>
+
+    <section id="screen-game" class="screen">
+      <header class="game-top">
+        <button id="btn-quit-level" class="icon-btn" type="button" aria-label="Quit level">←</button>
+        <div>
+          <p id="game-level" class="level-label">LEVEL 01</p>
+          <p class="score-line">Score <span id="live-score">0</span></p>
+        </div>
+        <span class="chip sm">🪙 <span data-coins>0</span></span>
+      </header>
+
+      <div class="timer-wrap">
+        <div id="timer-pill" class="timer-pill"><span class="tico">⏱</span><span id="timer-value">00:00</span></div>
+      </div>
+
+      <div id="chain-list" class="chain-list"></div>
+
+      <div class="dock">
+        <button id="btn-hint" class="btn btn-hint" type="button"><span>💡</span> Hint <small>· <span id="hint-cost">15</span> 🪙</small></button>
+        <p class="tap-note">Just start typing</p>
+      </div>
+      <input id="key-catcher" class="key-catcher" type="text" value="~" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" inputmode="text" aria-label="keyboard input" tabindex="-1" />
+    </section>
+  </div>
+
+  <div id="complete-modal" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-card celebrate-card">
+      <p class="burst">✦</p>
+      <h3>Chain complete</h3>
+      <p id="complete-stars" class="star-big">★★★</p>
+      <p class="complete-stats"><span>Score <strong id="complete-score">0</strong></span><span>Hints <strong id="complete-hints">0</strong></span><span>Time <strong id="complete-time">00:00</strong></span></p>
+      <p id="complete-best" class="best-line">Best: 00:00</p>
+      <ul id="complete-links" class="link-list"></ul>
+      <button id="btn-next-level" class="btn btn-primary" type="button">Next level</button>
+      <div class="btn-row">
+        <button id="btn-complete-levels" class="btn btn-ghost" type="button">Levels</button>
+        <button id="btn-complete-menu" class="btn btn-ghost" type="button">Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="reset-modal" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <h3>Reset all progress?</h3>
+      <p>Levels, stars, scores, and coins will go back to the start.</p>
+      <button id="btn-reset-yes" class="btn btn-danger" type="button">Yes, reset</button>
+      <button id="btn-reset-no" class="btn btn-ghost" type="button">Cancel</button>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/redeemCodes.js"></script>
+  <script src="js/levels.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/sounds.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

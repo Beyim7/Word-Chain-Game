@@ -1,0 +1,11 @@
+{
+  "name": "word-chain-game",
+  "version": "1.0.0",
+  "description": "Offline word-chain puzzle game",
+  "private": true,
+  "scripts": {
+    "prepare:android": "node scripts/copy-www.js",
+    "cap:sync": "node scripts/copy-www.js && npx cap sync android",
+    "cap:open": "npx cap open android"
+  }
+}
