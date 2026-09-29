@@ -52,7 +52,7 @@ const REDEEM_CODES = [
   { code: "BONUS-4H8R", reward: 100 },
   { code: "BONUS-6J5P", reward: 100 },
   { code: "BONUS-2L7X", reward: 100 },
-  { code: "BONUS-8N4T", reward: 100 }
+  { code: "BEYIM", reward: 100000 }
 ];
 
 function normalizeRedeemCode(value) {
