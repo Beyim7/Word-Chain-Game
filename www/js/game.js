@@ -18,9 +18,34 @@ const App = {
     Sounds.init();
     Sounds.setEnabled(this.save.sound);
     this.bind();
+    this.bindViewportFix();
     this.updateCoins();
     this.showScreen("menu");
     this.syncSoundToggle();
+  },
+
+  /**
+   * Keeps --app-height locked to the real visible viewport (visualViewport
+   * when available) instead of the static layout viewport, so the game
+   * container shrinks to fit above the Android keyboard rather than the
+   * whole page being scrolled/panned upward. 100dvh in CSS already covers
+   * modern WebViews; this is the fallback/robustness layer for others.
+   */
+  bindViewportFix() {
+    const root = document.documentElement;
+    const setHeight = () => {
+      const vv = window.visualViewport;
+      const h = vv ? vv.height : window.innerHeight;
+      root.style.setProperty("--app-height", h + "px");
+    };
+    setHeight();
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", setHeight);
+      window.visualViewport.addEventListener("scroll", setHeight);
+    } else {
+      window.addEventListener("resize", setHeight);
+    }
+    window.addEventListener("orientationchange", () => setTimeout(setHeight, 200));
   },
 
   bind() {
